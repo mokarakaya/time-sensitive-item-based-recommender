@@ -50,17 +50,6 @@ public class BooleanPrefSimilarity implements Similarity{
 			Gson gson= new Gson();
 			String write=gson.toJson(similarityMatrix);
 			bw.write(write);
-//			Iterator<Integer> iterator = similarityMatrix.keySet().iterator();
-//			while(iterator.hasNext()){
-//				int itemId=iterator.next();
-//				Map<Integer, Double> itemMap = similarityMatrix.get(itemId);
-//				Iterator<Integer> similarityIterator = itemMap.keySet().iterator();
-//				while(similarityIterator.hasNext()){
-//					int similarItemId= similarityIterator.next();
-//					bw.write(itemId+","+similarItemId+","+itemMap.get(similarItemId));
-//					bw.newLine();
-//				}
-//			}
 		} finally {
 			if (bw != null) {
 				bw.close();
@@ -75,17 +64,6 @@ public class BooleanPrefSimilarity implements Similarity{
 			String line = br.readLine();
 			Gson gson = new Gson();
 			similarityMatrix=gson.fromJson(line, HashMap.class);
-//			while (line != null) {
-//				String[] split = line.split(",");
-//				int itemId = Integer.parseInt(split[0].trim());
-//				int similarItemId = Integer.parseInt(split[1].trim());
-//				double similarity= Double.parseDouble(split[2]);
-//				if(similarityMatrix.get(itemId)==null){
-//					similarityMatrix.put(itemId, new HashMap<Integer,Double>());
-//				}
-//				similarityMatrix.get(itemId).put(similarItemId, similarity);
-//				line = br.readLine();
-//			}
 		} finally {
 			if (br != null) {
 				br.close();

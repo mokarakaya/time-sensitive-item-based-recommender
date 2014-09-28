@@ -9,9 +9,9 @@ import com.recommender.data.Data;
 import com.recommender.model.Purchase;
 import com.recommender.similarity.Similarity;
 
-public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
+public class ItemBasedRecommender  extends AbstractItemBasedRecommender{
 
-	public TimeAwareItemBasedRecommender(Data data,Similarity similarity){
+	public ItemBasedRecommender(Data data,Similarity similarity){
 		this.data=data;
 		this.similarity=similarity;
 		
