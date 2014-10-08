@@ -32,6 +32,7 @@ public abstract class AbstractSimilarity implements Similarity {
 		} else {
 			int numberOfItems = data.getNumberOfItems();
 			for (int i = 0; i < numberOfItems; i++) {
+				System.out.println(i +" of "+numberOfItems);
 				similarityMatrix.put(i, new HashMap<Integer, Double>());
 				for (int j = i+1; j < numberOfItems; j++) {
 					double similarity=calculateSimilarity(i, j, data);
