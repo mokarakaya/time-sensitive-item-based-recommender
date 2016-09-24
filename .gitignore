@@ -1,1 +1,8 @@
 /target
+/.settings
+.classpath
+.project
+.idea
+main.iml
+test.iml
+recommender.iml

@@ -7,9 +7,10 @@ public interface Similarity {
 	 * returns the similarity of two items
 	 * @param firstItem
 	 * @param secondItem
+	 * @param data
 	 * @return
 	 */
-	double getSimilarity(int firstItem,int secondItem);
+	double getSimilarity(int firstItem, int secondItem, Data data);
 	
 	Double calculateSimilarity(int i, int j,Data data);
 	

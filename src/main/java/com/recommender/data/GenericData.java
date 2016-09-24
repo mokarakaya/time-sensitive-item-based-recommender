@@ -1,9 +1,6 @@
 package com.recommender.data;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,22 +11,22 @@ import com.recommender.model.Purchase;
 
 public class GenericData implements Data{
 
-	private Map<Integer,Map<Integer,Purchase>> userMap;
-	private Map<Integer,List<Integer>> itemMap;
+	private final Map<Integer,Map<Integer,Purchase>> userMap;
+	private final Map<Integer,List<Integer>> itemMap;
 	
 	public GenericData(String filePath) throws IOException, ParseException {
-		userMap = new HashMap<Integer, Map<Integer, Purchase>>();
-		itemMap = new HashMap<Integer, List<Integer>>();
+		userMap = new HashMap<>();
+		itemMap = new HashMap<>();
 		loadData(filePath);
 	}
 
 	private void loadData(String filePath) throws FileNotFoundException, IOException {
 		BufferedReader br =null;
 		try {
-			br = new BufferedReader(new FileReader(filePath));
+			br = new BufferedReader(new FileReader(getFile(filePath)));
 			String line = br.readLine();
 			while (line != null) {
-				String[] split = line.split(",");
+				String[] split = line.split("::");
 				int userId = Integer.parseInt(split[0].trim());
 				int itemId = Integer.parseInt(split[1].trim());
 				long time = Long.parseLong(split[2]);
@@ -62,10 +59,15 @@ public class GenericData implements Data{
 	public int getNumberOfItems() {
 		return itemMap.size();
 	}
-
+	private File getFile(String fileName) {
+		ClassLoader classLoader = getClass().getClassLoader();
+		return new File(classLoader.getResource(fileName).getFile());
+	}
 	public int getNumberOfUsers() {
 		return userMap.size();
 	}
 
-	
+	public Map<Integer, List<Integer>> getItemMap() {
+		return itemMap;
+	}
 }

@@ -11,6 +11,7 @@ public interface Data {
 	List<Integer> getItem(int itemId);
 	int getNumberOfItems();
 	int getNumberOfUsers();
+	Map<Integer, List<Integer>> getItemMap();
 	
 
 }

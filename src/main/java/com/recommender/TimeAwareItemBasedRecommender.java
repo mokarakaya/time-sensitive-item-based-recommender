@@ -1,10 +1,8 @@
 package com.recommender;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.ecyrd.speed4j.log.Log;
 import com.recommender.data.Data;
 import com.recommender.model.Purchase;
 import com.recommender.similarity.Similarity;
@@ -31,36 +29,47 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 	public List<Integer> recommend(int userId,int numberOfRecommendation) {
 		Map<Integer,Double>predictionMap= new HashMap<Integer, Double>();
 		Map<Integer, Purchase> user = data.getUser(userId);
-		long firstPurchase=Long.MAX_VALUE;
-		long lastPurchase=Long.MIN_VALUE;
+
 		boolean timeAwareable = user.size()>2;
 		if(timeAwareable){
-			//we should get last and first purchase dates. we will use these dates while prediction
-			Iterator<Integer> iterator = user.keySet().iterator();
-			while(iterator.hasNext()){
-				Purchase purchase = user.get(iterator.next());
-				if(purchase.getTimestamp()>lastPurchase){
-					lastPurchase=purchase.getTimestamp();
-				}else if(purchase.getTimestamp()<firstPurchase){
-					firstPurchase=purchase.getTimestamp();
-				}
-			}
+			Map<Integer, Long> purchaseTimeRanges = getPurchaseTimeRanges(user);
+			final long firstPurchase=purchaseTimeRanges.get(0);
+			final long lastPurchase=purchaseTimeRanges.get(1);
+			final Random random= new Random();
+			data.getItemMap().keySet()
+					.parallelStream()
+					.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>5 )
+					.forEach(itemId->{
+						double prediction= predict(userId,itemId,lastPurchase,firstPurchase);
+						if(prediction!=0){
+							predictionMap.put(itemId, prediction);
+						}
+					});
+			return getRecommendationList(numberOfRecommendation, predictionMap);
 		}else{
 			return super.recommend(userId, numberOfRecommendation);
 		}
-		
-		for(int i=0; i<data.getNumberOfItems();i++){
-			if(!user.containsKey(i)){
-				double prediction;
-				prediction= predict(userId,i,lastPurchase,firstPurchase);
-				if(prediction!=0){
-					predictionMap.put(i, prediction);
-				}
+
+
+	}
+	public Map<Integer,Long> getPurchaseTimeRanges(Map<Integer, Purchase> user){
+		//we should get last and first purchase dates. we will use these dates while prediction
+		long firstPurchase=Long.MAX_VALUE;
+		long lastPurchase=Long.MIN_VALUE;
+		Iterator<Integer> iterator = user.keySet().iterator();
+		while(iterator.hasNext()){
+			Purchase purchase = user.get(iterator.next());
+			if(purchase.getTimestamp()>lastPurchase){
+				lastPurchase=purchase.getTimestamp();
+			}else if(purchase.getTimestamp()<firstPurchase){
+				firstPurchase=purchase.getTimestamp();
 			}
 		}
-		return getRecommendationList(numberOfRecommendation, predictionMap);
+		Map<Integer,Long> purchaseTimeRange= new HashMap<>();
+		purchaseTimeRange.put(0,firstPurchase);
+		purchaseTimeRange.put(1,lastPurchase);
+		return purchaseTimeRange;
 	}
-
 	/**
 	 * time awareness formula is as follows;
 	 * (last-current) / (last-first)
@@ -78,7 +87,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 			int purchasedItemId=iterator.next();
 			long currentPurchase=user.get(purchasedItemId).getTimestamp();
 			double weight = 1 - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
-			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId)* weight;
+			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId,data)* weight;
 		}
 		return totalSimilarity/user.size();
 	}

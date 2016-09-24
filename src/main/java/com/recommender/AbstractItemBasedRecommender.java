@@ -22,7 +22,7 @@ public abstract class AbstractItemBasedRecommender extends AbstractRecommender{
 		double totalSimilarity=0;
 		while(iterator.hasNext()){
 			int purchasedItemId=iterator.next();
-			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId);
+			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId, data);
 		}
 		return totalSimilarity/user.size();
 	}
