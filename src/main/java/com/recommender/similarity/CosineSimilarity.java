@@ -1,16 +1,16 @@
 package com.recommender.similarity;
 
-import java.io.IOException;
+import com.recommender.data.Data;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import com.recommender.data.Data;
 
-public class BooleanPrefSimilarity implements Similarity {
+public class CosineSimilarity implements Similarity {
 	
-	private final Map<Integer,Map<Integer,Double>> similarityMatrix;
-	public BooleanPrefSimilarity(){
+	private volatile Map<Integer,Map<Integer,Double>> similarityMatrix;
+	public CosineSimilarity(){
 		this.similarityMatrix= new ConcurrentHashMap<>();
 	}
 
@@ -34,7 +34,7 @@ public class BooleanPrefSimilarity implements Similarity {
 	 * @param data
 	 * @return
 	 */
-	public Double calculateSimilarity(int i, int j,Data data) {
+	public  Double calculateSimilarity(int i, int j,Data data) {
 		List<Integer> itemi = data.getItem(i);
 		List<Integer> itemj = data.getItem(j);
 		double coPurchased=0;
@@ -43,8 +43,8 @@ public class BooleanPrefSimilarity implements Similarity {
 				coPurchased++;
 			}
 		}
-		similarityMatrix.putIfAbsent(i,new HashMap<>());
 		double similarity = coPurchased / Math.max(itemi.size(), itemj.size());
+		similarityMatrix.putIfAbsent(i,new HashMap<>());
 		similarityMatrix.get(i).put(j,similarity);
 		return similarity;
 	}

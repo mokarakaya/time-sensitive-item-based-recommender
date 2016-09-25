@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class GenericData implements Data {
 
-    private final Map<Integer, Map<Integer, Purchase>> userMap;
+    private final  Map<Integer, Map<Integer, Purchase>> userMap;
     private final Map<Integer, List<Integer>> itemMap;
 
     public GenericData(){

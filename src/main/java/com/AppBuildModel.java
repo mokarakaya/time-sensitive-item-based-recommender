@@ -4,7 +4,7 @@ import com.recommender.Recommender;
 import com.recommender.TimeAwareItemBasedRecommender;
 import com.recommender.data.Data;
 import com.recommender.data.GenericData;
-import com.recommender.similarity.BooleanPrefSimilarity;
+import com.recommender.similarity.CosineSimilarity;
 import com.recommender.similarity.Similarity;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class AppBuildModel {
         Data data= new GenericData();
         data.loadData(FILE_PATH);
         System.out.println("data loaded:"+new Date());
-        Similarity similarity= new BooleanPrefSimilarity();
+        Similarity similarity= new CosineSimilarity();
         final Recommender recommender = new TimeAwareItemBasedRecommender(data,similarity);
         //recommend items to first 5 users.
         IntStream.rangeClosed(1,5).parallel().forEach(i->{
