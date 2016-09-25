@@ -29,11 +29,12 @@ public class GenericData implements Data{
 				String[] split = line.split("::");
 				int userId = Integer.parseInt(split[0].trim());
 				int itemId = Integer.parseInt(split[1].trim());
-				long time = Long.parseLong(split[2]);
+				int rating = Integer.parseInt(split[2].trim());
+				double time = Double.parseDouble(split[3]);
 				if(userMap.get(userId)==null){
 					userMap.put(userId, new HashMap<Integer, Purchase>());
 				}
-				userMap.get(userId).put(itemId, new Purchase(time));
+				userMap.get(userId).put(itemId, new Purchase(rating,time));
 				
 				if(itemMap.get(itemId)==null){
 					itemMap.put(itemId, new ArrayList<Integer>());

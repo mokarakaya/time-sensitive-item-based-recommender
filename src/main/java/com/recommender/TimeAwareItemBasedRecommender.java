@@ -35,9 +35,9 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 			throw new IllegalArgumentException("user does not have enough ratings. Number of ratings is "+user.size());
 		}
 		Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
-		Map<Integer, Long> purchaseTimeRanges = getPurchaseTimeRanges(user);
-		final long firstPurchase=purchaseTimeRanges.get(0);
-		final long lastPurchase=purchaseTimeRanges.get(1);
+		Map<Integer, Double> purchaseTimeRanges = getPurchaseTimeRanges(user);
+		final double firstPurchase=purchaseTimeRanges.get(0);
+		final double lastPurchase=purchaseTimeRanges.get(1);
 		final Random random= new Random();
 		data.getItemMap().keySet()
 				.parallelStream()
@@ -50,10 +50,10 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 				});
 		return getRecommendationList(numberOfRecommendation, predictionMap);
 	}
-	public Map<Integer,Long> getPurchaseTimeRanges(Map<Integer, Purchase> user){
+	public Map<Integer,Double> getPurchaseTimeRanges(Map<Integer, Purchase> user){
 		//we should get last and first purchase dates. we will use these dates while prediction
-		long firstPurchase=Long.MAX_VALUE;
-		long lastPurchase=Long.MIN_VALUE;
+		double firstPurchase=Double.MAX_VALUE;
+		double lastPurchase=Double.MIN_VALUE;
 		Iterator<Integer> iterator = user.keySet().iterator();
 		while(iterator.hasNext()){
 			Purchase purchase = user.get(iterator.next());
@@ -63,7 +63,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 				firstPurchase=purchase.getTimestamp();
 			}
 		}
-		Map<Integer,Long> purchaseTimeRange= new HashMap<>();
+		Map<Integer,Double> purchaseTimeRange= new HashMap<>();
 		purchaseTimeRange.put(0,firstPurchase);
 		purchaseTimeRange.put(1,lastPurchase);
 		return purchaseTimeRange;
@@ -77,14 +77,14 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 	 * @param firstPurchase
 	 * @return
 	 */
-	public double predict(int userId, int itemId, long lastPurchase, long firstPurchase) {
+	public double predict(int userId, int itemId, double lastPurchase, double firstPurchase) {
 		Map<Integer, Purchase> user = data.getUser(userId);
 		Iterator<Integer> iterator = user.keySet().iterator();
 		double totalSimilarity=0;
 		while(iterator.hasNext()){
 			int purchasedItemId=iterator.next();
-			long currentPurchase=user.get(purchasedItemId).getTimestamp();
-			double weight = 1d - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
+			double currentPurchase=user.get(purchasedItemId).getTimestamp();
+			double weight = 1l - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
 			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId,data)* weight;
 		}
 		return totalSimilarity/user.size();
