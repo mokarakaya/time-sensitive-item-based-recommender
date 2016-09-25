@@ -1,20 +1,19 @@
 package com.recommender.data;
 
+import com.recommender.model.Purchase;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.json.simple.parser.ParseException;
-
-import com.recommender.model.Purchase;
 
 public class GenericData implements Data{
 
 	private final Map<Integer,Map<Integer,Purchase>> userMap;
 	private final Map<Integer,List<Integer>> itemMap;
 	
-	public GenericData(String filePath) throws IOException, ParseException {
+	public GenericData(String filePath) throws IOException {
 		userMap = new HashMap<>();
 		itemMap = new HashMap<>();
 		loadData(filePath);

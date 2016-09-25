@@ -1,24 +1,22 @@
 package com;
 
+import com.recommender.Recommender;
+import com.recommender.TimeAwareItemBasedRecommender;
+import com.recommender.data.Data;
+import com.recommender.data.GenericData;
+import com.recommender.similarity.BooleanPrefSimilarity;
+import com.recommender.similarity.Similarity;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.recommender.similarity.BooleanPrefSimilarity;
-import org.json.simple.parser.ParseException;
-
-import com.recommender.Recommender;
-import com.recommender.TimeAwareItemBasedRecommender;
-import com.recommender.data.Data;
-import com.recommender.data.GenericData;
-import com.recommender.similarity.Similarity;
-
 public class AppBuildModel {
 	
 	private static final String FILE_PATH= "ratings.dat";
     private static final int RECOMMENDED_ITEMS=20;
-	public static void main( String[] args ) throws IOException, ParseException, InterruptedException
+	public static void main( String[] args ) throws IOException, InterruptedException
     {
 		System.out.println(new Date());
         Data data= new GenericData(FILE_PATH);
@@ -35,6 +33,7 @@ public class AppBuildModel {
                 System.out.println(new Date());
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         });
     }

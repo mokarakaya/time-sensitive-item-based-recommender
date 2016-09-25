@@ -1,14 +1,11 @@
 package com.recommender;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import com.recommender.data.Data;
+import com.recommender.similarity.Similarity;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.recommender.data.Data;
-import com.recommender.model.Purchase;
-import com.recommender.similarity.Similarity;
 
 /**
  * every item based recommender should extend this class and override methods when needed.

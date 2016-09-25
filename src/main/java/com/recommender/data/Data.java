@@ -1,9 +1,9 @@
 package com.recommender.data;
 
+import com.recommender.model.Purchase;
+
 import java.util.List;
 import java.util.Map;
-
-import com.recommender.model.Purchase;
 
 public interface Data {
 	

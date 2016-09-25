@@ -1,14 +1,11 @@
 package com.recommender;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
-
-import com.ecyrd.speed4j.log.Log;
 import com.recommender.data.Data;
 import com.recommender.model.Purchase;
 import com.recommender.similarity.Similarity;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
