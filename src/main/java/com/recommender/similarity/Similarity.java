@@ -12,6 +12,5 @@ public interface Similarity {
 	 */
 	double getSimilarity(int firstItem, int secondItem, Data data);
 	
-	Double calculateSimilarity(int i, int j,Data data);
-	
+
 }

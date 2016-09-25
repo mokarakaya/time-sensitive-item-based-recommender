@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.recommender.data.Data;
 import com.recommender.model.Purchase;
 import com.recommender.similarity.Similarity;
 
@@ -13,30 +15,15 @@ import com.recommender.similarity.Similarity;
  * @author p.bell
  *
  */
-public abstract class AbstractItemBasedRecommender extends AbstractRecommender{
+public abstract class AbstractItemBasedRecommender implements Recommender{
 	protected Similarity similarity;
-	
-	public double predict(int userId, int itemId) {
-		Map<Integer, Purchase> user = data.getUser(userId);
-		Iterator<Integer> iterator = user.keySet().iterator();
-		double totalSimilarity=0;
-		while(iterator.hasNext()){
-			int purchasedItemId=iterator.next();
-			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId, data);
-		}
-		return totalSimilarity/user.size();
-	}
-	public List<Integer> recommend(int userId,int numberOfRecommendation) throws InterruptedException {
-		Map<Integer,Double>predictionMap= new HashMap<Integer, Double>();
-		Map<Integer, Purchase> user = data.getUser(userId);
-		for(int i=0; i<data.getNumberOfItems();i++){
-			if(!user.containsKey(i)){
-				double prediction= predict(userId,i);
-				if(prediction!=0){
-					predictionMap.put(i, prediction);
-				}
-			}
-		}
-		return getRecommendationList(numberOfRecommendation, predictionMap);
+	protected Data data;
+
+	protected List<Integer> getRecommendationList(int numberOfRecommendation, Map<Integer, Double> predictionMap) {
+		return predictionMap.entrySet().stream()
+				.sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
+				.limit(numberOfRecommendation)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
 	}
 }

@@ -30,30 +30,25 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 	}
 
 	public List<Integer> recommend(int userId,int numberOfRecommendation) throws InterruptedException {
-		Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
 		Map<Integer, Purchase> user = data.getUser(userId);
-
-		boolean timeAwareable = user.size()>2;
-		if(timeAwareable){
-			Map<Integer, Long> purchaseTimeRanges = getPurchaseTimeRanges(user);
-			final long firstPurchase=purchaseTimeRanges.get(0);
-			final long lastPurchase=purchaseTimeRanges.get(1);
-			final Random random= new Random();
-			data.getItemMap().keySet()
-					.parallelStream()
-					.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>=8 )
-					.forEach(itemId->{
-						double prediction= predict(userId,itemId,lastPurchase,firstPurchase);
-						if(prediction!=0){
-							predictionMap.put(itemId, prediction);
-						}
-					});
-			return getRecommendationList(numberOfRecommendation, predictionMap);
-		}else{
-			return super.recommend(userId, numberOfRecommendation);
+		if(user.size()<=2){
+			throw new IllegalArgumentException("user does not have enough ratings. Number of ratings is "+user.size());
 		}
-
-
+		Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
+		Map<Integer, Long> purchaseTimeRanges = getPurchaseTimeRanges(user);
+		final long firstPurchase=purchaseTimeRanges.get(0);
+		final long lastPurchase=purchaseTimeRanges.get(1);
+		final Random random= new Random();
+		data.getItemMap().keySet()
+				.parallelStream()
+				.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>=8 )
+				.forEach(itemId->{
+					double prediction= predict(userId,itemId,lastPurchase,firstPurchase);
+					if(prediction!=0){
+						predictionMap.put(itemId, prediction);
+					}
+				});
+		return getRecommendationList(numberOfRecommendation, predictionMap);
 	}
 	public Map<Integer,Long> getPurchaseTimeRanges(Map<Integer, Purchase> user){
 		//we should get last and first purchase dates. we will use these dates while prediction
@@ -89,7 +84,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 		while(iterator.hasNext()){
 			int purchasedItemId=iterator.next();
 			long currentPurchase=user.get(purchasedItemId).getTimestamp();
-			double weight = 1 - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
+			double weight = 1d - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
 			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId,data)* weight;
 		}
 		return totalSimilarity/user.size();

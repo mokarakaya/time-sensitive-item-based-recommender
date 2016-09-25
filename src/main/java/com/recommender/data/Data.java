@@ -9,8 +9,6 @@ public interface Data {
 	
 	Map<Integer,Purchase> getUser(int userId);
 	List<Integer> getItem(int itemId);
-	int getNumberOfItems();
-	int getNumberOfUsers();
 	Map<Integer, List<Integer>> getItemMap();
 	
 

@@ -31,7 +31,7 @@ public class AppBuildModel {
         stream.parallel().forEach(i->{
             try {
                 List<Integer> recommend= recommender.recommend(i, RECOMMENDED_ITEMS);
-                System.out.println("recommended items for "+i+" :"+recommend);
+                System.out.println("recommended items for user "+i+" :"+recommend);
                 System.out.println(new Date());
             } catch (InterruptedException e) {
                 e.printStackTrace();
