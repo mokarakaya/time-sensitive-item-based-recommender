@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * this is a general Recommender interface with basic functions and all recommenders should implement this.
- * @author p.bell
+ * @author mokarakaya
  *
  */
 public interface Recommender {

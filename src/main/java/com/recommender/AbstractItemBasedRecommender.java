@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * every item based recommender should extend this class and override methods when needed.
- * @author p.bell
+ * @author mokarakaya
  *
  */
 public abstract class AbstractItemBasedRecommender implements Recommender{

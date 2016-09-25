@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * similarity= similarity * (1- ((last-current) / (last-first)))
  * 
  * this is applied to the customers who has more than 2 purchases.
- * @author p.bell
+ * @author mokarakaya
  *
  */
 public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
@@ -81,7 +81,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 		while(iterator.hasNext()){
 			int purchasedItemId=iterator.next();
 			double currentPurchase=user.get(purchasedItemId).getTimestamp();
-			double weight = 1l - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
+			double weight = 1d - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
 			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId,data)* weight;
 		}
 		return totalSimilarity/user.size();
