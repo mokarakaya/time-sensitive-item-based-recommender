@@ -1,6 +1,9 @@
 package com.recommender;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
 import com.ecyrd.speed4j.log.Log;
 import com.recommender.data.Data;
@@ -26,8 +29,8 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 		
 	}
 
-	public List<Integer> recommend(int userId,int numberOfRecommendation) {
-		Map<Integer,Double>predictionMap= new HashMap<Integer, Double>();
+	public List<Integer> recommend(int userId,int numberOfRecommendation) throws InterruptedException {
+		Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
 		Map<Integer, Purchase> user = data.getUser(userId);
 
 		boolean timeAwareable = user.size()>2;
@@ -38,7 +41,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 			final Random random= new Random();
 			data.getItemMap().keySet()
 					.parallelStream()
-					.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>5 )
+					.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>=8 )
 					.forEach(itemId->{
 						double prediction= predict(userId,itemId,lastPurchase,firstPurchase);
 						if(prediction!=0){

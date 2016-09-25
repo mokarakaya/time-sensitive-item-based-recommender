@@ -26,7 +26,7 @@ public abstract class AbstractItemBasedRecommender extends AbstractRecommender{
 		}
 		return totalSimilarity/user.size();
 	}
-	public List<Integer> recommend(int userId,int numberOfRecommendation) {
+	public List<Integer> recommend(int userId,int numberOfRecommendation) throws InterruptedException {
 		Map<Integer,Double>predictionMap= new HashMap<Integer, Double>();
 		Map<Integer, Purchase> user = data.getUser(userId);
 		for(int i=0; i<data.getNumberOfItems();i++){
