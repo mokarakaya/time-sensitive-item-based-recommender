@@ -1,6 +1,6 @@
 package com.recommender.model;
 
-public final class Purchase {
+public class Purchase {
 
 	final private int rating;
 	final private double timestamp;
