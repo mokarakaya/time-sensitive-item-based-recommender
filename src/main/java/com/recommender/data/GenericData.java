@@ -2,20 +2,18 @@ package com.recommender.data;
 
 import com.recommender.model.Purchase;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class GenericData implements Data {
 
     private final  Map<Integer, Map<Integer, Purchase>> userMap;
-    private final Map<Integer, List<Integer>> itemMap;
+    private final Map<Integer, Map<Integer, Purchase>> itemMap;
 
     public GenericData(){
         userMap = new HashMap<>();
@@ -32,9 +30,10 @@ public class GenericData implements Data {
                 int rating = Integer.parseInt(split[2].trim());
                 double time = Double.parseDouble(split[3]);
                 userMap.putIfAbsent(userId, new HashMap<>());
-                userMap.get(userId).put(itemId, new Purchase(rating, time));
-                itemMap.putIfAbsent(itemId, new ArrayList<>());
-                itemMap.get(itemId).add(userId);
+                final Purchase purchase = new Purchase(rating, time);
+                userMap.get(userId).put(itemId,purchase );
+                itemMap.putIfAbsent(itemId, new HashMap<>());
+                itemMap.get(itemId).put(userId,purchase );
             });
         }
     }
@@ -43,11 +42,11 @@ public class GenericData implements Data {
         return userMap.get(userId);
     }
 
-    public List<Integer> getItem(int itemId) {
+    public Map<Integer, Purchase> getItem(int itemId) {
         return itemMap.get(itemId);
     }
 
-    public Map<Integer, List<Integer>> getItemMap() {
+    public Map<Integer, Map<Integer, Purchase>> getItemMap() {
         return itemMap;
     }
 }
