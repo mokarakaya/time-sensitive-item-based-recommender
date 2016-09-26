@@ -28,8 +28,8 @@ public class CosineSimilarity extends  AbstractSimilarity {
         double dotProduct = set.stream()
                 .mapToDouble(itemId -> itemi.get(itemId).getRating() * itemj.get(itemId).getRating())
                 .sum();
-        double itemiSqrt = getSquareSum(itemi);
-        double itemjSqrt = getSquareSum(itemj);
+        double itemiSqrt = getSumOfSquares(itemi);
+        double itemjSqrt = getSumOfSquares(itemj);
 
         double similarity = dotProduct / (Math.sqrt(itemiSqrt)*Math.sqrt(itemjSqrt));
         similarityMatrix.putIfAbsent(i,new HashMap<>());
@@ -37,7 +37,7 @@ public class CosineSimilarity extends  AbstractSimilarity {
         return similarity;
     }
 
-    private double getSquareSum(Map<Integer, Purchase> map) {
+    private double getSumOfSquares(Map<Integer, Purchase> map) {
         return map.values().stream()
                 .mapToDouble(purchase -> purchase.getRating() * purchase.getRating())
                 .sum();
