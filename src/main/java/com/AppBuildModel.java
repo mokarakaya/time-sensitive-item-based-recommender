@@ -17,7 +17,7 @@ public class AppBuildModel {
 	
 	private static final String FILE_PATH= "ratings.dat";
     private static final int RECOMMENDED_ITEMS=20;
-	public static void main( String[] args ) throws IOException, InterruptedException, URISyntaxException {
+	public static void main( String[] args ) throws IOException, URISyntaxException {
 		System.out.println(new Date());
         Data data= new GenericData();
         data.loadData(FILE_PATH);
@@ -25,15 +25,10 @@ public class AppBuildModel {
         Similarity similarity= new CosineSimilarity();
         final Recommender recommender = new TimeAwareItemBasedRecommender(data,similarity);
         //recommend items to first 5 users.
-        IntStream.rangeClosed(1,5).parallel().forEach(i->{
-            try {
-                List<Integer> recommend= recommender.recommend(i, RECOMMENDED_ITEMS);
-                System.out.println("recommended items for user "+i+" :"+recommend);
-                System.out.println(new Date());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+        IntStream.rangeClosed(1,5).parallel().forEach(i-> {
+            List<Integer> recommend = recommender.recommend(i, RECOMMENDED_ITEMS);
+            System.out.println("recommended items for user " + i + " :" + recommend);
+            System.out.println(new Date());
         });
     }
 }

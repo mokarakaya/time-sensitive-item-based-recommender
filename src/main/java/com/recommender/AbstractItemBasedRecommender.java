@@ -13,8 +13,14 @@ import java.util.stream.Collectors;
  *
  */
 public abstract class AbstractItemBasedRecommender implements Recommender{
-	protected Similarity similarity;
-	protected Data data;
+	protected final Similarity similarity;
+	protected final Data data;
+
+    public AbstractItemBasedRecommender(Data data,Similarity similarity){
+        this.data=data;
+        this.similarity=similarity;
+
+    }
 
 	protected List<Integer> getRecommendationList(int numberOfRecommendation, Map<Integer, Double> predictionMap) {
 		return predictionMap.entrySet().stream()

@@ -21,21 +21,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 
 	public TimeAwareItemBasedRecommender(Data data,Similarity similarity){
-		this.data=data;
-		this.similarity=similarity;
-		
+		super(data,similarity);
 	}
 
-	public List<Integer> recommend(int userId,int numberOfRecommendation) throws InterruptedException {
+	public List<Integer> recommend(int userId,int numberOfRecommendation){
 		Map<Integer, Purchase> user = data.getUser(userId);
 		if(user.size()<=2){
 			throw new IllegalArgumentException("user does not have enough ratings. Number of ratings is "+user.size());
 		}
-		Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
-		Map<Integer, Double> purchaseTimeRanges = getPurchaseTimeRanges(user);
-		final double firstPurchase=purchaseTimeRanges.get(0);
-		final double lastPurchase=purchaseTimeRanges.get(1);
+		final DoubleSummaryStatistics statistics = user.values().stream()
+				.mapToDouble(purchase -> purchase.getTimestamp())
+				.summaryStatistics();
+		final double firstPurchase=statistics.getMin();
+		final double lastPurchase=statistics.getMax();
 		final Random random= new Random();
+		final Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
 		data.getItemMap().keySet()
 				.parallelStream()
 				.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>=8 )
@@ -47,24 +47,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 				});
 		return getRecommendationList(numberOfRecommendation, predictionMap);
 	}
-	public Map<Integer,Double> getPurchaseTimeRanges(Map<Integer, Purchase> user){
-		//we should get last and first purchase dates. we will use these dates while prediction
-		double firstPurchase=Double.MAX_VALUE;
-		double lastPurchase=Double.MIN_VALUE;
-		Iterator<Integer> iterator = user.keySet().iterator();
-		while(iterator.hasNext()){
-			Purchase purchase = user.get(iterator.next());
-			if(purchase.getTimestamp()>lastPurchase){
-				lastPurchase=purchase.getTimestamp();
-			}else if(purchase.getTimestamp()<firstPurchase){
-				firstPurchase=purchase.getTimestamp();
-			}
-		}
-		Map<Integer,Double> purchaseTimeRange= new HashMap<>();
-		purchaseTimeRange.put(0,firstPurchase);
-		purchaseTimeRange.put(1,lastPurchase);
-		return purchaseTimeRange;
-	}
+
 	/**
 	 * time awareness formula is as follows;
 	 * (last-current) / (last-first)
@@ -74,16 +57,13 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 	 * @param firstPurchase
 	 * @return
 	 */
-	public double predict(int userId, int itemId, double lastPurchase, double firstPurchase) {
+	public double predict(final int userId, final int itemId, final double lastPurchase, final double firstPurchase) {
 		Map<Integer, Purchase> user = data.getUser(userId);
-		Iterator<Integer> iterator = user.keySet().iterator();
-		double totalSimilarity=0;
-		while(iterator.hasNext()){
-			int purchasedItemId=iterator.next();
-			double currentPurchase=user.get(purchasedItemId).getTimestamp();
-			double weight = 1d - ((lastPurchase - currentPurchase) / (lastPurchase - firstPurchase));
-			totalSimilarity+=similarity.getSimilarity(itemId, purchasedItemId,data)* weight;
-		}
-		return totalSimilarity/user.size();
+		return user.entrySet().stream()
+				.mapToDouble(entry -> {
+					double weight = 1d - ((lastPurchase - entry.getValue().getTimestamp())
+							/ (lastPurchase - firstPurchase));
+					return similarity.getSimilarity(itemId, entry.getKey(), data) * weight;
+				}).summaryStatistics().getAverage();
 	}
 }

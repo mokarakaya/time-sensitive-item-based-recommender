@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface Recommender {
 
-	List<Integer> recommend(int userId,int numberOfRecommendation) throws InterruptedException;
+	List<Integer> recommend(int userId,int numberOfRecommendation);
 }
