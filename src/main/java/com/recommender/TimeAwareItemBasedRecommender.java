@@ -20,8 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 
-	public TimeAwareItemBasedRecommender(Data data,Similarity similarity){
+	private final int candidateItemPercentage;
+	public TimeAwareItemBasedRecommender(Data data, Similarity similarity, int candidateItemPercentage){
 		super(data,similarity);
+		this.candidateItemPercentage=candidateItemPercentage;
 	}
 
 	public List<Integer> recommend(int userId,int numberOfRecommendation){
@@ -38,7 +40,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 		final Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
 		data.getItemMap().keySet()
 				.parallelStream()
-				.filter(itemId->!user.containsKey(itemId) && random.nextInt(10)>=8 )
+				.filter(itemId->!user.containsKey(itemId) && random.nextInt(100)<=candidateItemPercentage )
 				.forEach(itemId->{
 					double prediction= predict(userId,itemId,lastPurchase,firstPurchase);
 					if(prediction!=0){
