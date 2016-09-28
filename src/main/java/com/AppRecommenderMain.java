@@ -18,18 +18,16 @@ public class AppRecommenderMain {
 	private static final String FILE_PATH= "/ratings.dat";
     private static final int RECOMMENDED_ITEMS=20;
     private static final int CANDIDATE_ITEM_PERCENTAGE=20;
-	public static void main( String[] args ) throws IOException, URISyntaxException {
-		System.out.println(new Date());
+
+    public static void main( String[] args ) throws IOException, URISyntaxException {
         Data data= new GenericData();
         data.loadData(AppRecommenderMain.class.getResource(FILE_PATH).toURI());
-        System.out.println("data loaded:"+new Date());
         Similarity similarity= new CosineSimilarity();
         final Recommender recommender = new TimeSensitiveItemBasedRecommender(data,similarity,CANDIDATE_ITEM_PERCENTAGE);
         //recommend 20 items to first 5 users.
         IntStream.rangeClosed(1,5).parallel().forEach(i-> {
             List<Integer> recommend = recommender.recommend(i, RECOMMENDED_ITEMS);
             System.out.println("recommended items for user " + i + " :" + recommend);
-            System.out.println(new Date());
         });
     }
 }
