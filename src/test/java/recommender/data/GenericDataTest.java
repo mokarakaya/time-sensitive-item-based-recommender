@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * Created by mokarakaya on 28.09.2016.
@@ -15,16 +15,17 @@ import static org.junit.Assert.assertEquals;
 public class GenericDataTest {
 
     public static final String TEST_FILE_PATH = "/testRatings.dat";
+    public static final String TEST_FILE_PATH_LOTS_OF_ITEMS = "/testRatingsLotsOfItems.dat";
 
     @Test
     public void testLoadData() throws IOException, URISyntaxException {
-        Data data = getData();
-        assertEquals(3,data.getItemMap().size());
+        Data data = getData(TEST_FILE_PATH);
+        assertEquals(4,data.getItemMap().size());
     }
 
-    public Data getData() throws IOException, URISyntaxException {
+    public Data getData(String filePath) throws IOException, URISyntaxException {
         Data data = new GenericData();
-        data.loadData(getClass().getResource(TEST_FILE_PATH).toURI());
+        data.loadData(getClass().getResource(filePath).toURI());
         return data;
     }
 }
