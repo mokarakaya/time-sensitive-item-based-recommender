@@ -12,17 +12,17 @@ import java.util.stream.Collectors;
  * @author mokarakaya
  *
  */
-public abstract class AbstractItemBasedRecommender implements Recommender{
-	protected final Similarity similarity;
-	protected final Data data;
+abstract class AbstractItemBasedRecommender implements Recommender{
+	final Similarity similarity;
+	final Data data;
 
-    public AbstractItemBasedRecommender(Data data,Similarity similarity){
+    AbstractItemBasedRecommender(Data data,Similarity similarity){
         this.data=data;
         this.similarity=similarity;
 
     }
 
-	protected List<Integer> getRecommendationList(int numberOfRecommendation, Map<Integer, Double> predictionMap) {
+	List<Integer> getRecommendationList(int numberOfRecommendation, Map<Integer, Double> predictionMap) {
 		return predictionMap.entrySet().stream()
 				.sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
 				.limit(numberOfRecommendation)

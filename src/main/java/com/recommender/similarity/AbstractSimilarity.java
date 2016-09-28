@@ -5,10 +5,10 @@ import com.recommender.data.Data;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractSimilarity implements Similarity {
+abstract class AbstractSimilarity implements Similarity {
 	
-	protected volatile Map<Integer,Map<Integer,Double>> similarityMatrix;
-	protected AbstractSimilarity(){
+	volatile Map<Integer,Map<Integer,Double>> similarityMatrix;
+	AbstractSimilarity(){
 		this.similarityMatrix= new ConcurrentHashMap<>();
 	}
 
@@ -33,5 +33,5 @@ public abstract class AbstractSimilarity implements Similarity {
 	 * @param data
 	 * @return
 	 */
-	protected abstract Double calculateSimilarity(int i, int j, Data data);
+	abstract Double calculateSimilarity(int i, int j, Data data);
 }

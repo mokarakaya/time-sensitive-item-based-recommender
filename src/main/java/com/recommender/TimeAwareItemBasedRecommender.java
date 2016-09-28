@@ -32,7 +32,7 @@ public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
 			throw new IllegalArgumentException("user does not have enough ratings. Number of ratings is "+user.size());
 		}
 		final DoubleSummaryStatistics statistics = user.values().stream()
-				.mapToDouble(purchase -> purchase.getTimestamp())
+				.mapToDouble(Purchase::getTimestamp)
 				.summaryStatistics();
 		final double firstPurchase=statistics.getMin();
 		final double lastPurchase=statistics.getMax();

@@ -3,6 +3,7 @@ package com.recommender.data;
 import com.recommender.model.Purchase;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,8 +22,8 @@ public class GenericData implements Data {
     }
 
     @Override
-    public void loadData(String filePath) throws IOException, URISyntaxException {
-        try (Stream<String> stream = Files.lines(Paths.get(ClassLoader.getSystemResource(filePath).toURI()))) {
+    public void loadData(URI filePath) throws IOException, URISyntaxException {
+        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
             stream.forEach(line -> {
                 String[] split = line.split("::");
                 int userId = Integer.parseInt(split[0].trim());
