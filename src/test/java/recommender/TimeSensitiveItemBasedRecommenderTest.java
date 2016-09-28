@@ -9,7 +9,7 @@ import org.junit.Test;
 public class TimeSensitiveItemBasedRecommenderTest extends TestCase {
 
     @Test
-    public void testGetSimilaritySymmetric() {
+    public void testRecommend() {
 
     }
 }
