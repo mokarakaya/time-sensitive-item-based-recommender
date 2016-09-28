@@ -1,7 +1,6 @@
 package recommender.similarity;
 
 import com.recommender.data.Data;
-import com.recommender.data.GenericData;
 import com.recommender.similarity.CosineSimilarity;
 import com.recommender.similarity.Similarity;
 import junit.framework.TestCase;
@@ -10,8 +9,6 @@ import recommender.data.GenericDataTest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import static recommender.data.GenericDataTest.TEST_FILE_PATH;
 
 /**
  * Created by mokarakaya on 28.09.2016.

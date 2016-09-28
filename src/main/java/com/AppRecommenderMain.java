@@ -1,7 +1,7 @@
 package com;
 
 import com.recommender.Recommender;
-import com.recommender.TimeAwareItemBasedRecommender;
+import com.recommender.TimeSensitiveItemBasedRecommender;
 import com.recommender.data.Data;
 import com.recommender.data.GenericData;
 import com.recommender.similarity.CosineSimilarity;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class AppBuildModel {
+public class AppRecommenderMain {
 	
 	private static final String FILE_PATH= "/ratings.dat";
     private static final int RECOMMENDED_ITEMS=20;
@@ -21,11 +21,11 @@ public class AppBuildModel {
 	public static void main( String[] args ) throws IOException, URISyntaxException {
 		System.out.println(new Date());
         Data data= new GenericData();
-        data.loadData(AppBuildModel.class.getResource(FILE_PATH).toURI());
+        data.loadData(AppRecommenderMain.class.getResource(FILE_PATH).toURI());
         System.out.println("data loaded:"+new Date());
         Similarity similarity= new CosineSimilarity();
-        final Recommender recommender = new TimeAwareItemBasedRecommender(data,similarity,CANDIDATE_ITEM_PERCENTAGE);
-        //recommend items to first 5 users.
+        final Recommender recommender = new TimeSensitiveItemBasedRecommender(data,similarity,CANDIDATE_ITEM_PERCENTAGE);
+        //recommend 20 items to first 5 users.
         IntStream.rangeClosed(1,5).parallel().forEach(i-> {
             List<Integer> recommend = recommender.recommend(i, RECOMMENDED_ITEMS);
             System.out.println("recommended items for user " + i + " :" + recommend);

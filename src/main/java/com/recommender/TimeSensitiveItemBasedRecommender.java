@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * TimeAwareItemBasedRecommender is a kind of item based recommender.
+ * TimeSensitiveItemBasedRecommender is a kind of item based recommender.
  * we just override prediction algorithm and prioritize the last purchases.
  * formula is;
  * similarity= similarity * (1- ((last-current) / (last-first)))
@@ -18,10 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author mokarakaya
  *
  */
-public class TimeAwareItemBasedRecommender extends AbstractItemBasedRecommender{
+public class TimeSensitiveItemBasedRecommender extends AbstractItemBasedRecommender{
 
 	private final int candidateItemPercentage;
-	public TimeAwareItemBasedRecommender(Data data, Similarity similarity, int candidateItemPercentage){
+	public TimeSensitiveItemBasedRecommender(Data data, Similarity similarity, int candidateItemPercentage){
 		super(data,similarity);
 		this.candidateItemPercentage=candidateItemPercentage;
 	}
