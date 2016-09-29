@@ -1,5 +1,5 @@
 # time-sensitive-item-based-recommender
-Time aware Item Based Recommendation System
+Time Sensitive Item Based Recommendation System
 
 In this study, I implemented a time sensitive item based collaborative filtering recommender system.
 This system basically recommends movies to particular users by using their ratings to other items.
