@@ -23,12 +23,14 @@ public class AppRecommenderMain {
         Data data= new GenericData();
         data.loadData(AppRecommenderMain.class.getResource(FILE_PATH).toURI());
         Similarity similarity= new CosineSimilarity();
+        System.out.println(new Date());
         final Recommender recommender = new TimeSensitiveItemBasedRecommender(data,similarity,CANDIDATE_ITEM_PERCENTAGE);
         //recommend 20 items to first 5 users.
-        IntStream.rangeClosed(1,5).parallel().forEach(i-> {
+        IntStream.rangeClosed(1,5).forEach(i-> {
             List<Integer> recommend = recommender.recommend(i, RECOMMENDED_ITEMS);
             System.out.println("recommended items for user " + i + " :" + recommend);
         });
+        System.out.println(new Date());
     }
 }
 

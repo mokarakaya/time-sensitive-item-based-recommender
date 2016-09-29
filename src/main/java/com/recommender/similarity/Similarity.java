@@ -2,6 +2,9 @@ package com.recommender.similarity;
 
 import com.recommender.data.Data;
 
+/**
+ *
+ */
 public interface Similarity {
 	/**
 	 * returns the similarity of two items
