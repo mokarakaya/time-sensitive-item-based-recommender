@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static recommender.data.GenericDataTest.TEST_FILE_PATH;
 import static recommender.data.GenericDataTest.TEST_FILE_PATH_LOTS_OF_ITEMS;
 
@@ -37,7 +38,7 @@ public class TimeSensitiveItemBasedRecommenderTest {
         assertEquals(20,recommend.size());
         int[] recommendedArr= new int []{23, 22, 21, 20, 14, 15, 16, 17, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 18, 19};
         for (int i=0;i<recommendedArr.length;i++){
-            assertEquals(recommendedArr[i],recommend.get(i).intValue());
+            assertTrue(recommend.contains(recommendedArr[i]));
         }
 
     }
