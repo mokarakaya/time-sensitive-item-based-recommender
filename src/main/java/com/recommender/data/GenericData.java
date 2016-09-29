@@ -4,7 +4,6 @@ import com.recommender.model.Purchase;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ public class GenericData implements Data {
     }
 
     @Override
-    public void loadData(URI filePath) throws IOException, URISyntaxException {
+    public void loadData(URI filePath) throws IOException {
         try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
             stream.forEach(line -> {
                 String[] split = line.split("::");

@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class AppRecommenderMain {
-	
+
+    //this is MovieLens 100K Dataset @ http://grouplens.org/datasets/movielens/100k/
 	private static final String FILE_PATH= "/ratings.dat";
     private static final int RECOMMENDED_ITEMS=20;
     private static final int CANDIDATE_ITEM_PERCENTAGE=20;

@@ -38,6 +38,7 @@ public class TimeSensitiveItemBasedRecommender extends AbstractItemBasedRecommen
 		final double lastPurchase=statistics.getMax();
 		final Random random= new Random();
 		final Map<Integer,Double>predictionMap= new ConcurrentHashMap<>();
+		//instead of having fixed pool we have parallelStream to use processors as much as possible since this is a batch job.
 		data.getItemMap().keySet()
 				.parallelStream()
 				.filter(itemId->!user.containsKey(itemId) && random.nextInt(100)<=candidateItemPercentage )
@@ -59,7 +60,7 @@ public class TimeSensitiveItemBasedRecommender extends AbstractItemBasedRecommen
 	 * @param firstPurchase
 	 * @return
 	 */
-	public double predict(final int userId, final int itemId, final double lastPurchase, final double firstPurchase) {
+	private double predict(final int userId, final int itemId, final double lastPurchase, final double firstPurchase) {
 		Map<Integer, Purchase> user = data.getUser(userId);
 		return user.entrySet().stream()
 				.mapToDouble(entry -> {

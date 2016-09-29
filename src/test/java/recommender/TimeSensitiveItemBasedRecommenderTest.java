@@ -37,8 +37,8 @@ public class TimeSensitiveItemBasedRecommenderTest {
         System.out.println(recommend);
         assertEquals(20,recommend.size());
         int[] recommendedArr= new int []{23, 22, 21, 20, 14, 15, 16, 17, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 18, 19};
-        for (int i=0;i<recommendedArr.length;i++){
-            assertTrue(recommend.contains(recommendedArr[i]));
+        for (int i : recommendedArr) {
+            assertTrue(recommend.contains(i));
         }
 
     }
